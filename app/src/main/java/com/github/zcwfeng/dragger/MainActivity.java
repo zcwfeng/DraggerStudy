@@ -9,23 +9,39 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.github.zcwfeng.dragger.component.ActivityComponent;
+import com.github.zcwfeng.dragger.component.DaggerActivityComponent;
+import com.github.zcwfeng.dragger.model.ActivityModule;
+import com.github.zcwfeng.dragger.model.ApplicationModule;
+
 public class MainActivity extends AppCompatActivity {
 
+    private ActivityComponent component;
+
+    //    @Inject
+//    ToastHelper toastHelper;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        this.component = DaggerActivityComponent.builder().applicationComponent(((DraggerApplication) getApplication()).getComponent())
+                .activityModule(new ActivityModule(this)).build();
+        this.component.injectActivity(this);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(view -> Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show());
+
+
+    }
+
+    public void helloDagger2(View v) {
+//        toastHelper.showToast(this, "Dagger 2");
+//        toastHelper.show(this);
+        this.component.getToastHelper().showToast(this, "Dagger 2 Demo");
     }
 
     @Override
